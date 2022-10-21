@@ -5,31 +5,70 @@ using UnityEngine;
 public class playerMovement : MonoBehaviour
 {
     public CharacterController controller;
-    public float speed;
     public float gravity;
     public float jumpHeight;
+    public float walk;
+    public float sprint;
+    public float sprintCap;
 
     public Transform groundCheck;
-    public float groundDistance = 0.4f;
+    public float groundDistance;
     public LayerMask groundMask;
 
     Vector3 velocity;
+    float speed;
+    float sprintDur;
     bool isGrounded;
+    bool canSprint;
+    bool sprintRecharge;
+
+    void CheckGrounded()
+    {
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+    }
+
+    void CheckSprintCD()
+    {
+        if (sprintDur <= 0)
+        {
+            sprintRecharge = true;
+            canSprint = false;
+        }
+
+        if (sprintDur >= sprintCap)
+        {
+            sprintRecharge = false;
+            canSprint = true;
+        }
+    }
 
     // Update is called once per frame
     void Update()
     {
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+        Vector3 move = transform.right * x + transform.forward * z;
+
+        CheckGrounded();
+        CheckSprintCD();
 
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
         }
 
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
 
-        Vector3 move = transform.right * x + transform.forward * z;
+        if (Input.GetKey(KeyCode.LeftShift) && !sprintRecharge && canSprint)
+        {
+            speed = sprint;
+            sprintDur -= 1f * Time.deltaTime;
+        }
+        else
+        {
+            speed = walk;
+            if(sprintDur < sprintCap)
+                sprintDur += 1.5f * Time.deltaTime;
+        }
 
         controller.Move(move * speed * Time.deltaTime);
 

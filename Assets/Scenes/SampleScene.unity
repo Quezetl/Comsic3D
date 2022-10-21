@@ -515,7 +515,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 776943838}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -910,9 +910,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 1253346155}
-  speed: 10
   gravity: -39.2
   jumpHeight: 3
+  walk: 5
+  sprint: 10
+  sprintCap: 3
   groundCheck: {fileID: 310738039}
   groundDistance: 0.4
   groundMask:
