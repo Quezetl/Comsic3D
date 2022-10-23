@@ -21,10 +21,18 @@ public class playerMovement : MonoBehaviour
     bool isGrounded;
     bool canSprint;
     bool sprintRecharge;
-
+    bool isPaused;
     void CheckGrounded()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+    }
+
+    void CheckPaused()
+    {
+        if (Time.timeScale == 1)
+            isPaused = false;
+        else if (Time.timeScale == 0)
+            isPaused = true;
     }
 
     void CheckSprintCD()
@@ -45,6 +53,7 @@ public class playerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CheckPaused();
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
         Vector3 move = transform.right * x + transform.forward * z;
@@ -52,13 +61,13 @@ public class playerMovement : MonoBehaviour
         CheckGrounded();
         CheckSprintCD();
 
-        if (isGrounded && velocity.y < 0)
+        if (isGrounded && velocity.y < 0 && !isPaused)
         {
             velocity.y = -2f;
         }
 
 
-        if (Input.GetKey(KeyCode.LeftShift) && !sprintRecharge && canSprint)
+        if (Input.GetKey(KeyCode.LeftShift) && !sprintRecharge && canSprint && !isPaused)
         {
             speed = sprint;
             sprintDur -= 1f * Time.deltaTime;
@@ -72,16 +81,19 @@ public class playerMovement : MonoBehaviour
 
         controller.Move(move * speed * Time.deltaTime);
 
-        if(Input.GetButtonDown("Jump") && isGrounded)
+        if(Input.GetButtonDown("Jump") && isGrounded && !isPaused)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
 
-        if(Input.GetKey(KeyCode.LeftControl))
+        if(Input.GetKey(KeyCode.LeftControl) && !isPaused)
         {
-            Debug.Log($"{this.transform.localScale}");
-            this.transform.localScale = new Vector3(1.0f, .5f, 1.0f);
-            this.transform.Translate(new Vector3(0, -.5f, 0));
+            for (float i = 1.0f; i > 0.5; i -= 0.001f)
+            {
+                this.transform.localScale = new Vector3(1.0f, i, 1.0f);
+                this.transform.Translate(new Vector3(0, -i, 0));
+            }
+
         }
         else
         {
@@ -93,5 +105,10 @@ public class playerMovement : MonoBehaviour
 
         controller.Move(velocity * Time.deltaTime);
 
+    }
+
+    public float getSpeed()
+    {
+        return speed;
     }
 }
