@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class playerLook : MonoBehaviour
 {
+    string shipmsg;
+    int count = 0;
     float mouseX;
     float mouseY;
     bool paused;
@@ -14,11 +17,13 @@ public class playerLook : MonoBehaviour
     float xRotation = 0f;
 
 
+    public GameObject dialoguebox;
     // Start is called before the first frame update
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         paused = false;
+        shipmsg = "Is that… “Galactic Federation”  property?\nThey look like they had a rougher landing than me. Guess their big fancy ships are just for show.\nWell, I hope they’re in a good enough mood to share some fuel.";
     }
     
     void checkGameStatus()
@@ -44,7 +49,28 @@ public class playerLook : MonoBehaviour
             transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
             playerBody.Rotate(Vector3.up * mouseX);
         }
+        Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit mousePos);
 
+        if (mousePos.collider.CompareTag("Ship") && count == 0)
+        {
+            shipdialogue();
+            count++;
+        }
 
     }
+
+    void shipdialogue() 
+    { 
+        dialoguebox.GetComponentInChildren<TMPro.TextMeshProUGUI>(dialoguebox).text = shipmsg;
+        dialoguebox.SetActive(true);
+        count++;
+        Invoke("disableDialogue", 3f);
+     }
+
+
+    void disableDialogue()
+    {
+        dialoguebox.SetActive(false);
+    }
+
 }
