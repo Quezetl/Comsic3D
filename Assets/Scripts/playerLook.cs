@@ -6,7 +6,7 @@ using UnityEngine;
 public class playerLook : MonoBehaviour
 {
     string shipmsg;
-    int count = 0;
+    bool count = true;
     float mouseX;
     float mouseY;
     bool paused;
@@ -49,12 +49,16 @@ public class playerLook : MonoBehaviour
             transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
             playerBody.Rotate(Vector3.up * mouseX);
         }
-        Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit mousePos);
-
-        if (mousePos.collider.CompareTag("Ship") && count == 0)
+        if (count)
         {
-            shipdialogue();
-            count++;
+            bool hit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit mousePos);
+            if (!hit)
+                return;
+            if (mousePos.collider.CompareTag("Ship"))
+            {
+                shipdialogue();
+                count = false;
+            }
         }
 
     }
@@ -63,7 +67,6 @@ public class playerLook : MonoBehaviour
     { 
         dialoguebox.GetComponentInChildren<TMPro.TextMeshProUGUI>(dialoguebox).text = shipmsg;
         dialoguebox.SetActive(true);
-        count++;
         Invoke("disableDialogue", 3f);
      }
 

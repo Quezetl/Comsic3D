@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEditor.UIElements;
 using UnityEngine;
 
 public class DialogueMsg : MonoBehaviour
@@ -7,14 +9,14 @@ public class DialogueMsg : MonoBehaviour
     public string msg;
     public GameObject dialoguebox;
     public float msgTime;
-    int count = 0;
+    bool count = true;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.name == "Player" && count == 0)
+        if (other.name == "Player" && count == true)
         {
             dialoguebox.GetComponentInChildren<TMPro.TextMeshProUGUI>(dialoguebox).text = msg;
             dialoguebox.SetActive(true);
-            count++;
+            count = false;
             Invoke("disableDialogue", msgTime);
         }
     }
