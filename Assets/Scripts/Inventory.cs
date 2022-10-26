@@ -309,6 +309,7 @@ public class Inventory : MonoBehaviour
             {
                 CapLogBool[num] = true;
                 mousePos.transform.gameObject.SetActive(false);
+                Destroy(mousePos.transform.gameObject);
             }
         }
         else if (mousePos.collider.tag == "audioLogs")

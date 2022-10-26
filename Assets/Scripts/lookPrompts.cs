@@ -1,13 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class lookPrompts : MonoBehaviour
 {
     public string tags;
-    public string thisthis;
+    public string msg;
     public GameObject dialoguebox;
     public float msgTime;
+    public string level;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,16 +28,11 @@ public class lookPrompts : MonoBehaviour
     {
         dialoguebox.GetComponentInChildren<TMPro.TextMeshProUGUI>(dialoguebox).text = "Press 'E' to Interact";
         dialoguebox.SetActive(true);
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            dialoguebox.GetComponentInChildren<TMPro.TextMeshProUGUI>(dialoguebox).text = thisthis;
-        }
     }
 
 
     // Update is called once per frame
     void Update()
-    {
-       
+    { 
     }
 }

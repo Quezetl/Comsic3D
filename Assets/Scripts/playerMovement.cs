@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public class playerMovement : MonoBehaviour
@@ -22,6 +23,9 @@ public class playerMovement : MonoBehaviour
     bool canSprint;
     bool sprintRecharge;
     bool isPaused;
+
+
+    bool inside = true;
     void CheckGrounded()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
@@ -53,6 +57,9 @@ public class playerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        doorCheck();
+        insideSpeed();
+
         CheckPaused();
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
@@ -106,6 +113,59 @@ public class playerMovement : MonoBehaviour
         controller.Move(velocity * Time.deltaTime);
 
     }
+
+
+    void insideSpeed()
+    {
+        if (inside)
+        {
+            walk = 10f;
+            sprint = 20f;
+            sprintCap = 3f;
+        }
+        else
+        {
+            walk = 25f;
+            sprint = 40f;
+            sprintCap = 5f;
+        }
+    }
+    void doorCheck()
+    {
+        bool hit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit mousePos);
+
+        if (!hit)
+            return;
+        if (!mousePos.collider.CompareTag("door"))
+            return;
+
+        if (!inside)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                controller.enabled = false;
+                this.transform.position = new Vector3(815f, -216f, -1678f);
+                Debug.Log("inside condition met");
+                controller.enabled = true;
+                inside = true;
+            }
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                controller.enabled = false;
+                this.transform.position = new Vector3(254f, 66f, -555);
+                Debug.Log("inside condition met");
+                controller.enabled = true;
+                inside = false;
+            }
+
+        }
+
+
+    }
+
 
     public float getSpeed()
     {

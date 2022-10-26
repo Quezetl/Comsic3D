@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainLevelDay.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/ShipInterior.unity
+    guid: fff5f936e04a1bf4dbda4335499d5e79
+  - enabled: 1
+    path: Assets/Scenes/MainLevelNight.unity
+    guid: ef120f49767d4be4491602c76071134b
   m_configObjects: {}
